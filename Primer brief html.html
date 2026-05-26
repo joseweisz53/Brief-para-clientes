@@ -1,0 +1,876 @@
+﻿bash
+
+cat > /mnt/user-data/outputs/briefing-arquitecto.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brief — Página Web para Arquitectos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F0E8;
+    --warm-white: #FAF8F4;
+    --ink: #1A1714;
+    --ink-mid: #4A4540;
+    --ink-light: #8A837A;
+    --rule: #D8D0C4;
+    --accent: #B5926A;
+    --accent-light: #E8DDD0;
+    --section-bg: #FFFFFF;
+    --radius: 2px;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--ink);
+    padding: 3rem 0 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+  }
+  .header-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  .header-kicker {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .header-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--warm-white);
+    margin-bottom: 1.25rem;
+  }
+  .header-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .header-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: #A09890;
+    line-height: 1.7;
+    max-width: 520px;
+  }
+  .header-steps {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #2E2A27;
+  }
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #706860;
+    font-weight: 400;
+  }
+  .step-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-bar {
+    height: 3px;
+    background: var(--rule);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  /* ── LAYOUT ── */
+  .form-wrapper {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    background: var(--section-bg);
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.15s; }
+  .section:nth-child(4) { animation-delay: 0.2s; }
+  .section:nth-child(5) { animation-delay: 0.25s; }
+  .section:nth-child(6) { animation-delay: 0.3s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid var(--rule);
+    background: #FDFCFA;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-head:hover { background: var(--accent-light); }
+  .section-num {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent);
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .section-name {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mid);
+    flex: 1;
+  }
+  .section-toggle {
+    font-size: 20px;
+    color: var(--ink-light);
+    transition: transform 0.25s ease;
+    line-height: 1;
+  }
+  .section.collapsed .section-toggle { transform: rotate(-90deg); }
+  .section-status {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: #A8C5A0;
+    display: none;
+  }
+  .section.complete .section-status { display: block; }
+
+  .section-body {
+    padding: 1.75rem;
+    display: grid;
+    gap: 1.5rem;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.3s ease;
+    max-height: 2000px;
+  }
+  .section.collapsed .section-body {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  /* ── FIELDS ── */
+  .field { display: flex; flex-direction: column; gap: 0.5rem; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  @media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .label-hint {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ink-light);
+    display: block;
+    margin-top: 2px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--ink);
+    background: var(--warm-white);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="tel"]:focus,
+  textarea:focus {
+    border-color: var(--accent);
+    background: #FFF;
+  }
+  input::placeholder, textarea::placeholder {
+    color: #C0B8AE;
+    font-weight: 300;
+  }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+  /* ── CHIP OPTIONS ── */
+  .options-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-top: 0.25rem;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .chip {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-mid);
+    background: var(--warm-white);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+    line-height: 1;
+  }
+  .chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-light);
+  }
+  .chip.selected {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--warm-white);
+  }
+  .chip.single.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #FFF;
+  }
+
+  /* ── DIVIDER ── */
+  .field-divider {
+    border: none;
+    border-top: 1px dashed var(--rule);
+    margin: 0.25rem 0;
+  }
+
+  /* ── SUBMIT ── */
+  .submit-area {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.5s 0.4s ease forwards;
+  }
+  .btn-submit {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #FFF;
+    background: var(--ink);
+    border: none;
+    border-radius: var(--radius);
+    padding: 16px 48px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-submit::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+  }
+  .btn-submit:hover { background: #2E2A27; transform: translateY(-1px); }
+  .btn-submit:active { transform: translateY(0); }
+  .submit-note {
+    font-size: 12px;
+    color: var(--ink-light);
+    font-weight: 300;
+  }
+
+  /* ── SUCCESS ── */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 5rem 2rem;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .success-screen.visible { display: block; }
+  .success-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+  }
+  .success-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+  .success-title em { font-style: italic; color: var(--accent); }
+  .success-text {
+    font-size: 15px;
+    color: var(--ink-mid);
+    font-weight: 300;
+    line-height: 1.8;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 12px;
+    color: var(--ink-light);
+    font-weight: 300;
+    border-top: 1px solid var(--rule);
+    background: var(--warm-white);
+  }
+
+  /* ── PRINT FRIENDLY ── */
+  @media print {
+    .progress-bar, .btn-submit, .submit-note { display: none; }
+    .section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <p class="header-kicker">Brief de proyecto</p>
+    <h1 class="header-title">Su nueva<br><em>presencia digital</em></h1>
+    <p class="header-desc">Complete este formulario con la mayor precisión posible. No hay respuestas incorrectas — cada detalle nos ayuda a diseñar un sitio que represente fielmente su trabajo.</p>
+    <div class="header-steps">
+      <div class="step-item"><span class="step-dot"></span>6 secciones</div>
+      <div class="step-item"><span class="step-dot"></span>~10 minutos</div>
+      <div class="step-item"><span class="step-dot"></span>Sin datos obligatorios</div>
+    </div>
+  </div>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<main>
+  <div class="form-wrapper">
+    <form id="briefForm" novalidate>
+
+      <!-- 01 -->
+      <div class="section" data-section="1">
+        <div class="section-head" onclick="toggleSection(this)">
+          <span class="section-num">01</span>
+          <span class="section-name">Datos personales y estudio</span>
+          <span class="section-status">✓ Completo</span>
+          <span class="section-toggle">›</span>
+        </div>
+        <div class="section-body">
+          <div class="field-row">
+            <div class="field">
+              <label for="nombre">Nombre completo</label>
+              <input type="text" id="nombre" name="nombre" placeholder="Ej: María García López">
+            </div>
+            <div class="field">
+              <label for="ciudad">Ciudad donde ejerce</label>
+              <input type="text" id="ciudad" name="ciudad" placeholder="Ej: Buenos Aires, Argentina">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="email">Correo electrónico</label>
+              <input type="email" id="email" name="email" placeholder="su@email.com">
+            </div>
+            <div class="field">
+              <label for="trayectoria">Años de trayectoria</label>
+              <input type="text" id="trayectoria" name="trayectoria" placeholder="Ej: 12 años">
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Trabaja solo o en equipo?</label>
+            <div class="chips" data-name="equipo" data-type="single">
+              <div class="chip" data-value="solo">Solo</div>
+              <div class="chip" data-value="socios">Con socios</div>
+              <div class="chip" data-value="equipo">Con equipo de trabajo</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Cómo quiere identificarse en la web?</label>
+            <div class="chips" data-name="identidad" data-type="single">
+              <div class="chip" data-value="nombre">Nombre propio (ej: Juan García, arquitecto)</div>
+              <div class="chip" data-value="estudio">Nombre de estudio (ej: Estudio García)</div>
+              <div class="chip" data-value="indefinido">No lo tengo definido</div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="formacion">Formación y certificaciones destacadas
+              <span class="label-hint">Universidad, posgrados, especializaciones relevantes</span>
+            </label>
+            <input type="text" id="formacion" name="formacion" placeholder="Ej: FAU UBA, Maestría en Sustentabilidad...">
+          </div>
+          <div class="field">
+            <label>¿Está matriculado en un colegio o asociación profesional?</label>
+            <div class="chips" data-name="matricula" data-type="single">
+              <div class="chip" data-value="si">Sí, matriculado</div>
+              <div class="chip" data-value="no">No actualmente</div>
+              <div class="chip" data-value="proceso">En proceso</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 -->
+      <div class="section" data-section="2">
+        <div class="section-head" onclick="toggleSection(this)">
+          <span class="section-num">02</span>
+          <span class="section-name">Trabajo y especialidad</span>
+          <span class="section-status">✓ Completo</span>
+          <span class="section-toggle">›</span>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label>Tipos de proyectos que realiza
+              <span class="label-hint">Puede seleccionar varios</span>
+            </label>
+            <div class="chips" data-name="proyectos" data-type="multi">
+              <div class="chip" data-value="unifamiliares">Viviendas unifamiliares</div>
+              <div class="chip" data-value="edificios">Edificios en altura</div>
+              <div class="chip" data-value="locales">Locales comerciales</div>
+              <div class="chip" data-value="oficinas">Oficinas</div>
+              <div class="chip" data-value="industrial">Industrial</div>
+              <div class="chip" data-value="restauracion">Restauración y patrimonio</div>
+              <div class="chip" data-value="interiores">Diseño de interiores</div>
+              <div class="chip" data-value="obra">Dirección de obra</div>
+              <div class="chip" data-value="urbanismo">Urbanismo / paisajismo</div>
+              <div class="chip" data-value="otro_proyecto">Otro</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Tiene algún enfoque o sello propio?
+              <span class="label-hint">Lo que lo diferencia del resto. Puede elegir más de uno.</span>
+            </label>
+            <div class="chips" data-name="enfoque" data-type="multi">
+              <div class="chip" data-value="sustentable">Arquitectura sustentable</div>
+              <div class="chip" data-value="bioclimatico">Diseño bioclimático</div>
+              <div class="chip" data-value="contemporaneo">Estilo contemporáneo / minimalista</div>
+              <div class="chip" data-value="natural">Integración con entorno natural</div>
+              <div class="chip" data-value="presupuesto">Optimización de presupuesto</div>
+              <div class="chip" data-value="acompanamiento">Acompañamiento integral al cliente</div>
+              <div class="chip" data-value="sin_enfoque">No lo tengo claro todavía</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿En qué etapa del proceso trabaja habitualmente?</label>
+            <div class="chips" data-name="etapa" data-type="single">
+              <div class="chip" data-value="solo_diseno">Solo diseño / planos</div>
+              <div class="chip" data-value="solo_obra">Solo dirección de obra</div>
+              <div class="chip" data-value="ambas">Ambas etapas</div>
+              <div class="chip" data-value="depende">Depende del proyecto</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Trabaja con constructoras o desarrolladoras frecuentemente?</label>
+            <div class="chips" data-name="terceros" data-type="single">
+              <div class="chip" data-value="si_terceros">Sí, habitualmente</div>
+              <div class="chip" data-value="a_veces">A veces</div>
+              <div class="chip" data-value="no_terceros">No, trabajo directo con el cliente</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 -->
+      <div class="section" data-section="3">
+        <div class="section-head" onclick="toggleSection(this)">
+          <span class="section-num">03</span>
+          <span class="section-name">Clientes ideales</span>
+          <span class="section-status">✓ Completo</span>
+          <span class="section-toggle">›</span>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label>¿A quién quiere llegar?
+              <span class="label-hint">Puede seleccionar varios</span>
+            </label>
+            <div class="chips" data-name="clientes" data-type="multi">
+              <div class="chip" data-value="familias">Familias con terreno</div>
+              <div class="chip" data-value="inversores">Inversores inmobiliarios</div>
+              <div class="chip" data-value="empresas">Empresas / locales</div>
+              <div class="chip" data-value="reformas">Propietarios que quieren reformar</div>
+              <div class="chip" data-value="patrimonio">Propiedades históricas o patrimoniales</div>
+              <div class="chip" data-value="primera_vivienda">Particulares con primera vivienda</div>
+              <div class="chip" data-value="otro_cliente">Otro</div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="zona">Zona geográfica de trabajo</label>
+              <input type="text" id="zona" name="zona" placeholder="Ciudad, región, radio estimado...">
+            </div>
+            <div class="field">
+              <label>¿Acepta proyectos fuera de esa zona?</label>
+              <div class="chips" data-name="zona_extra" data-type="single">
+                <div class="chip" data-value="si_zona">Sí, sin problema</div>
+                <div class="chip" data-value="eventualmente">Eventualmente</div>
+                <div class="chip" data-value="no_zona">Solo zona local</div>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Quiere comunicar un presupuesto mínimo de obra en la web?
+              <span class="label-hint">Ayuda a filtrar clientes adecuados</span>
+            </label>
+            <div class="chips" data-name="presupuesto_min" data-type="single">
+              <div class="chip" data-value="si_min">Sí, tengo un mínimo claro</div>
+              <div class="chip" data-value="depende_proy">Depende del proyecto</div>
+              <div class="chip" data-value="no_pub">Prefiero no publicarlo</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Cómo suelen llegar sus clientes actualmente?</label>
+            <div class="chips" data-name="canal_actual" data-type="multi">
+              <div class="chip" data-value="recomendaciones">Recomendaciones personales</div>
+              <div class="chip" data-value="redes">Redes sociales (Instagram, etc.)</div>
+              <div class="chip" data-value="colegas">Colegas o contactos del sector</div>
+              <div class="chip" data-value="eventos">Eventos o exposiciones</div>
+              <div class="chip" data-value="sin_canal">No tengo un canal claro</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 -->
+      <div class="section" data-section="4">
+        <div class="section-head" onclick="toggleSection(this)">
+          <span class="section-num">04</span>
+          <span class="section-name">Materiales disponibles</span>
+          <span class="section-status">✓ Completo</span>
+          <span class="section-toggle">›</span>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label>¿Tiene fotos de proyectos?</label>
+            <div class="chips" data-name="fotos" data-type="single">
+              <div class="chip" data-value="profesionales">Fotos profesionales</div>
+              <div class="chip" data-value="propias">Fotos propias (teléfono / cámara)</div>
+              <div class="chip" data-value="pocas">Pocas, algunas</div>
+              <div class="chip" data-value="ninguna_foto">Ninguna aún</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Tiene renders o visualizaciones?</label>
+            <div class="chips" data-name="renders" data-type="single">
+              <div class="chip" data-value="si_renders">Sí, tengo varios</div>
+              <div class="chip" data-value="algunos_renders">Algunos</div>
+              <div class="chip" data-value="no_renders">No tengo</div>
+              <div class="chip" data-value="podria_renders">Podría generarlos</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Cantidad de proyectos para el portfolio</label>
+            <div class="chips" data-name="cantidad_proyectos" data-type="single">
+              <div class="chip" data-value="3a5">3 – 5 proyectos</div>
+              <div class="chip" data-value="6a10">6 – 10 proyectos</div>
+              <div class="chip" data-value="mas10">Más de 10</div>
+              <div class="chip" data-value="no_se_cant">No lo sé todavía</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Tiene planos u otro material técnico que quiera mostrar?</label>
+            <div class="chips" data-name="material_tecnico" data-type="single">
+              <div class="chip" data-value="si_mostrar">Sí y me interesa mostrarlo</div>
+              <div class="chip" data-value="si_no_pub">Sí, pero prefiero no publicarlo</div>
+              <div class="chip" data-value="no_ordenado">No tengo material ordenado</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Tiene logo o imagen de marca?</label>
+            <div class="chips" data-name="logo" data-type="single">
+              <div class="chip" data-value="si_logo">Sí, tengo logo</div>
+              <div class="chip" data-value="quiero_logo">No, pero me interesa tener uno</div>
+              <div class="chip" data-value="no_prioridad">No tengo y no es prioridad</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Tiene presencia en redes sociales activas?</label>
+            <div class="chips" data-name="redes_activas" data-type="multi">
+              <div class="chip" data-value="ig_activo">Instagram activo</div>
+              <div class="chip" data-value="ig_poco">Instagram, pero poco activo</div>
+              <div class="chip" data-value="linkedin">LinkedIn solamente</div>
+              <div class="chip" data-value="sin_redes">No tengo redes del estudio</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Tiene texto o biografía escrita sobre usted o su estudio?</label>
+            <div class="chips" data-name="bio" data-type="single">
+              <div class="chip" data-value="si_bio">Sí, tengo algo escrito</div>
+              <div class="chip" data-value="ayuda_bio">No, necesito ayuda para escribirlo</div>
+              <div class="chip" data-value="ideas_bio">Tengo ideas pero no está redactado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 -->
+      <div class="section" data-section="5">
+        <div class="section-head" onclick="toggleSection(this)">
+          <span class="section-num">05</span>
+          <span class="section-name">Objetivos y expectativas</span>
+          <span class="section-status">✓ Completo</span>
+          <span class="section-toggle">›</span>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label>¿Qué espera que haga un visitante al llegar a la web?
+              <span class="label-hint">Puede seleccionar varios</span>
+            </label>
+            <div class="chips" data-name="objetivo_visita" data-type="multi">
+              <div class="chip" data-value="presupuesto">Pedir un presupuesto</div>
+              <div class="chip" data-value="conocer">Conocer mi trabajo y portfolio</div>
+              <div class="chip" data-value="credibilidad">Validar mi credibilidad profesional</div>
+              <div class="chip" data-value="recomendar">Recomendarme a otros</div>
+              <div class="chip" data-value="consulta">Contactarme por una consulta</div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="transmitir">¿Qué quiere transmitir sobre usted y su trabajo?</label>
+            <textarea id="transmitir" name="transmitir" placeholder="Escríbalo con sus palabras..." rows="3"></textarea>
+          </div>
+          <div class="field">
+            <label for="frase_ideal">Si un cliente ideal visitara la web, ¿qué frase querría que pensara al salir?
+              <span class="label-hint">Ayuda a definir el mensaje principal del sitio</span>
+            </label>
+            <input type="text" id="frase_ideal" name="frase_ideal" placeholder='Ej: "Este arquitecto entiende exactamente lo que busco"'>
+          </div>
+          <div class="field">
+            <label>¿Tiene referencias visuales de webs que le gusten?</label>
+            <div class="chips" data-name="referencias" data-type="single">
+              <div class="chip" data-value="si_ref">Sí, puedo compartir links</div>
+              <div class="chip" data-value="ideas_ref">Tengo ideas vagas del estilo</div>
+              <div class="chip" data-value="no_ref">No tengo referencia clara</div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="links_ref">Si tiene links de referencia, compártalos aquí</label>
+            <input type="text" id="links_ref" name="links_ref" placeholder="https://... (separar con comas)">
+          </div>
+          <div class="field">
+            <label>¿Qué tono prefiere para el sitio?</label>
+            <div class="chips" data-name="tono" data-type="single">
+              <div class="chip" data-value="sobrio">Sobrio y profesional</div>
+              <div class="chip" data-value="calido">Cálido y cercano</div>
+              <div class="chip" data-value="creativo">Creativo y con personalidad</div>
+              <div class="chip" data-value="minimalista">Minimalista y con imagen</div>
+              <div class="chip" data-value="no_claro_tono">No lo tengo claro</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Tiene fecha límite o urgencia para lanzar?</label>
+            <div class="chips" data-name="fecha" data-type="single">
+              <div class="chip" data-value="si_fecha">Sí, tengo una fecha</div>
+              <div class="chip" data-value="bien_hecho">Prefiero hacerlo bien aunque tarde más</div>
+              <div class="chip" data-value="sin_urgencia">Sin urgencia</div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fecha_detalle">Si tiene una fecha, indíquela</label>
+            <input type="text" id="fecha_detalle" name="fecha_detalle" placeholder="Ej: Principios de octubre">
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 -->
+      <div class="section" data-section="6">
+        <div class="section-head" onclick="toggleSection(this)">
+          <span class="section-num">06</span>
+          <span class="section-name">Aspectos técnicos y administrativos</span>
+          <span class="section-status">✓ Completo</span>
+          <span class="section-toggle">›</span>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label>¿Tiene dominio web propio?
+              <span class="label-hint">Ej: www.estudiomiguel.com</span>
+            </label>
+            <div class="chips" data-name="dominio" data-type="single">
+              <div class="chip" data-value="si_dominio">Sí, ya tengo uno</div>
+              <div class="chip" data-value="no_dominio">No, necesito uno</div>
+              <div class="chip" data-value="no_se_dominio">No sé qué es eso</div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="dominio_nombre">Si ya tiene dominio, ¿cuál es?</label>
+            <input type="text" id="dominio_nombre" name="dominio_nombre" placeholder="Ej: www.miestudio.com">
+          </div>
+          <div class="field">
+            <label>¿Quiere poder actualizar el sitio usted mismo?</label>
+            <div class="chips" data-name="autonomia" data-type="single">
+              <div class="chip" data-value="autonomia_total">Sí, quiero autonomía total</div>
+              <div class="chip" data-value="cambios_basicos">Solo cambios básicos (fotos, textos)</div>
+              <div class="chip" data-value="delegar">Prefiero delegarlo siempre</div>
+              <div class="chip" data-value="no_se_auto">No lo sé aún</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Tiene presupuesto estimado para el proyecto web?</label>
+            <div class="chips" data-name="presupuesto_web" data-type="single">
+              <div class="chip" data-value="tiene_numero">Sí, tengo un número</div>
+              <div class="chip" data-value="idea_aprox">Tengo una idea aproximada</div>
+              <div class="chip" data-value="ver_opciones">Quiero conocer las opciones primero</div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="observaciones">¿Algo más que considere importante que sepamos?
+              <span class="label-hint">Contexto, limitaciones, expectativas especiales...</span>
+            </label>
+            <textarea id="observaciones" name="observaciones" placeholder="Escriba aquí cualquier detalle adicional..." rows="4"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-area">
+        <button type="submit" class="btn-submit">Enviar brief</button>
+        <p class="submit-note">Sus respuestas nos llegarán por correo. Le contactaremos a la brevedad.</p>
+      </div>
+
+    </form>
+
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">✦</div>
+      <h2 class="success-title">Muchas<br><em>gracias.</em></h2>
+      <p class="success-text">Recibimos su brief correctamente. Lo revisaremos con atención y le escribiremos en los próximos días para dar el siguiente paso.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  Brief de proyecto — Página web para arquitectos
+</footer>
+
+<script>
+  // Toggle section collapse
+  function toggleSection(head) {
+    const section = head.closest('.section');
+    section.classList.toggle('collapsed');
+    head.querySelector('.section-toggle').style.transform =
+      section.classList.contains('collapsed') ? 'rotate(-90deg)' : 'rotate(0deg)';
+  }
+
+  // Chip selection
+  document.querySelectorAll('.chips').forEach(group => {
+    const type = group.dataset.type;
+    group.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (type === 'single') {
+          group.querySelectorAll('.chip').forEach(c => c.classList.remove('selected', 'single'));
+          chip.classList.add('selected', 'single');
+        } else {
+          chip.classList.toggle('selected');
+        }
+        updateProgress();
+      });
+    });
+  });
+
+  // Progress bar
+  function updateProgress() {
+    const allChipGroups = document.querySelectorAll('.chips');
+    const allInputs = document.querySelectorAll('input[type="text"], input[type="email"], textarea');
+    let filled = 0;
+    let total = 0;
+
+    allChipGroups.forEach(g => {
+      total++;
+      if (g.querySelector('.chip.selected')) filled++;
+    });
+    allInputs.forEach(i => {
+      if (i.id && ['nombre','ciudad','email','trayectoria','transmitir'].includes(i.id)) {
+        total++;
+        if (i.value.trim()) filled++;
+      }
+    });
+
+    const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+  }
+
+  document.querySelectorAll('input, textarea').forEach(el => {
+    el.addEventListener('input', updateProgress);
+  });
+
+  // Form submit
+  document.getElementById('briefForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('briefForm').style.display = 'none';
+    document.getElementById('successScreen').classList.add('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
+HTMLEOF
+echo "Done"
